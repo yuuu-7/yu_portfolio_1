@@ -16,8 +16,12 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [isProjectsWindowOpen, setProjectsWindowOpen] = useState(false);
   const [isAboutWindowOpen, setAboutWindowOpen] = useState(false);
+  const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
 
-  const handleEnter = () => {
+  const handleEnter = (position: { x: number; y: number }) => {
+    console.log('Received button position in Home:', position);
+    setButtonPosition(position);
+    
     // 开始扩散效果
     setIsExpanding(true);
     
@@ -57,7 +61,7 @@ export default function Home() {
     <div className="w-full h-full">
       {/* 开屏界面 */}
       {!isDesktopVisible && (
-        <SplashScreen onEnter={handleEnter} isLoading={isLoading} progress={progress} backgroundImage="/garden-bg.jpg" isExpanding={isExpanding} />
+        <SplashScreen onEnter={handleEnter} isLoading={isLoading} progress={progress} backgroundImage="/garden-bg.jpg" isExpanding={isExpanding} buttonPosition={buttonPosition} />
       )}
       
       {/* 桌面内容 */}
