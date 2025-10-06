@@ -1,5 +1,5 @@
 // components/SplashScreen.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import SplashText from './SplashText';
 import SplashButton from './SplashButton';
 
@@ -15,6 +15,8 @@ interface SplashScreenProps {
 
 const SplashScreen = ({ onEnter, isLoading, progress, backgroundImage = '/garden-bg.jpg', isExpanding = false, buttonPosition, fadeOutText = false }: SplashScreenProps) => {
   const [localButtonPosition, setLocalButtonPosition] = useState({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // 使用传入的 buttonPosition 或本地状态
   const currentButtonPosition = buttonPosition || localButtonPosition;
@@ -24,8 +26,70 @@ const SplashScreen = ({ onEnter, isLoading, progress, backgroundImage = '/garden
     onEnter(position);
   };
 
+  // 生成动态眼睛光标
+  const generateEyesCursor = (mouseX: number, mouseY: number) => {
+    if (!containerRef.current) return 'auto';
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    // 计算相对于中心的角度
+    const deltaX = mouseX - centerX;
+    const deltaY = mouseY - centerY;
+    const angle = Math.atan2(deltaY, deltaX);
+    
+    // 计算眼珠偏移（限制在眼窝内）
+    const maxOffset = 3.5; // 稍微缩小后，适当调整偏移
+    const offsetX = Math.cos(angle) * maxOffset;
+    const offsetY = Math.sin(angle) * maxOffset;
+    
+    // 生成眼睛 SVG
+    const svg = `
+      <svg width="44" height="22" viewBox="0 0 44 22" xmlns="http://www.w3.org/2000/svg">
+        <!-- 左眼外白边框 -->
+        <ellipse cx="11" cy="11" rx="8.8" ry="5.8" fill="none" stroke="white" stroke-width="1.2"/>
+        <!-- 左眼主体（含内阴影描边） -->
+        <ellipse cx="11" cy="11" rx="8" ry="5" fill="white" stroke="rgba(0,0,0,0.25)" stroke-width="0.8"/>
+        <circle cx="${11 + offsetX}" cy="${11 + offsetY}" r="2.6" fill="black"/>
+        
+        <!-- 右眼外白边框 -->
+        <ellipse cx="33" cy="11" rx="8.8" ry="5.8" fill="none" stroke="white" stroke-width="1.2"/>
+        <!-- 右眼主体（含内阴影描边） -->
+        <ellipse cx="33" cy="11" rx="8" ry="5" fill="white" stroke="rgba(0,0,0,0.25)" stroke-width="0.8"/>
+        <circle cx="${33 + offsetX}" cy="${11 + offsetY}" r="2.6" fill="black"/>
+      </svg>
+    `;
+    
+    // 使用 UTF-8 编码避免 btoa 的 Latin1 限制
+    return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}"), auto`;
+  };
+
+  // 监听鼠标移动
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setMousePosition({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top
+        });
+      }
+    };
+
+    if (containerRef.current) {
+      containerRef.current.addEventListener('mousemove', handleMouseMove);
+      return () => {
+        if (containerRef.current) {
+          containerRef.current.removeEventListener('mousemove', handleMouseMove);
+        }
+      };
+    }
+  }, []);
+
   return (
     <div 
+      ref={containerRef}
       className="fixed inset-0 w-full h-full flex flex-col items-center justify-center text-white z-50 transition-all duration-1000 ease-out"
       style={{
         backgroundImage: `url(${backgroundImage})`,
@@ -42,7 +106,7 @@ const SplashScreen = ({ onEnter, isLoading, progress, backgroundImage = '/garden
         width: '100vw',
         height: '100vh',
         zIndex: 9999,
-        cursor: 'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDRDMTYuNDE4IDQgMjAgNy41ODIgMjAgMTJDMjAgMTYuNDE4IDE2LjQxOCAyMCAxMiAyMEM3LjU4MiAyMCA0IDE2LjQxOCA0IDEyQzQgNy41ODIgNy41ODIgNCAxMiA0WiIgZmlsbD0iI0ZGRkZGRiIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPHBhdGggZD0iTTEyIDlDMTMuNjU2OSA5IDE1IDEwLjM0MzEgMTUgMTJDMTUgMTMuNjU2OSAxMy42NTY5IDE1IDEyIDE1QzEwLjM0MzEgMTUgOSAxMy42NTY5IDkgMTJDOSAxMC4zNDMxIDEwLjM0MzEgOSAxMiA5WiIgZmlsbD0iIzAwMDAwMCIvPgo8L3N2Zz4K"), auto'
+        cursor: generateEyesCursor(mousePosition.x, mousePosition.y)
       }}
     >
       {!isLoading ? (

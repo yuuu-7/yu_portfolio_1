@@ -15,7 +15,10 @@ const SplashText = ({ isVisible, fadeOutText = false }: SplashTextProps) => {
       style={{ 
         zIndex: 10, 
         lineHeight: '0.5', 
-        transform: 'translateY(-76px)',
+        position: 'absolute',
+        left: '50%',
+        top: '32%',
+        transform: 'translate(-50%, -50%)',
         opacity: fadeOutText ? 0 : 1
       }}
     >

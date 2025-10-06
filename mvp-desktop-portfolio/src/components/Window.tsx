@@ -17,7 +17,7 @@ const Window = ({ title, onClose, children }: WindowProps) => {
       transform: 'translate(-50%, -50%)',
       width: '800px',
       height: '500px',
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
       backdropFilter: 'blur(20px)',
       borderRadius: '16px',
       boxShadow: 'inset 0 0 10px rgba(255, 255, 255, 0.2)',
@@ -32,7 +32,7 @@ const Window = ({ title, onClose, children }: WindowProps) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         height: '40px',
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
         borderRadius: '16px 16px 0 0',
         padding: '0 16px',
         borderBottom: '1px solid rgba(255, 255, 255, 0.2)'

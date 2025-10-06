@@ -65,11 +65,32 @@ const ProjectsContent = () => {
           <p style={{
             fontSize: '14px',
             color: '#424242',
-            margin: '0',
+            margin: '0 0 12px 0',
             lineHeight: '1.4'
           }}>
             {project.description}
           </p>
+          
+          {/* 技术栈标签 */}
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '4px'
+          }}>
+            {project.tech.map((tech, index) => (
+              <span key={index} style={{
+                backgroundColor: 'rgba(251, 146, 60, 0.2)',
+                color: '#fb923c',
+                padding: '2px 6px',
+                borderRadius: '4px',
+                fontSize: '11px',
+                fontWeight: '500',
+                border: '1px solid rgba(251, 146, 60, 0.3)'
+              }}>
+                {tech}
+              </span>
+            ))}
+          </div>
         </div>
       ))}
     </div>
