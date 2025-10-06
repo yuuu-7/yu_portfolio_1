@@ -1,145 +1,574 @@
-````markdown
-# Tasks - 个人创意桌面网站
+# Tasks - 场景化数字桌面个人网站
 
 ## Phase 0: 初始化
 
-### T0.1: 项目初始化 (Next.js + Tailwind CSS)
-- **步骤 1: 创建项目**
-  打开终端，执行以下命令来创建 Next.js 项目。在交互式提问中，请确保选择使用 `TypeScript` 和 `Tailwind CSS`。
-  ```bash
-  npx create-next-app@latest mvp-desktop-portfolio
-````
+### T0.1: 创建项目环境
 
-  - **步骤 2: 进入项目目录**
+  - **步骤 1: 创建 Next.js 项目**
+    打开终端，运行以下命令，并根据提示选择默认选项（特别是使用 App Router）：
     ```bash
-    cd mvp-desktop-portfolio
+    npx create-next-app@latest digital-desktop-portfolio --typescript --tailwind --eslint --app
     ```
-  - **步骤 3: 启动开发服务器**
+  - **步骤 2: 进入项目目录并启动**
     ```bash
+    cd digital-desktop-portfolio
     npm run dev
     ```
+  - **步骤 3: 验证**
+    在浏览器中打开 `http://localhost:3000`。
 
-**验收：**
+验收：
 
-  - [ ] 浏览器访问 `http://localhost:3000` 能看到 Next.js 的默认欢迎页面。
-  - [ ] 项目根目录下生成了 `tailwind.config.ts` 文件。
+  - [ ] 浏览器成功打开 `http://localhost:3000`。
+  - [ ] 页面显示 Next.js 的欢迎页面。
 
 -----
 
-### T0.2: 清理与结构准备
+### T0.2: 清理项目与建立结构
 
   - **步骤 1: 清理默认样式**
-    打开 `src/app/globals.css` 文件，删除除了最前面 `@tailwind` 指令之外的所有内容，保留如下：
+    打开 `app/globals.css` 文件，删除所有内容，并替换为：
     ```css
     @tailwind base;
     @tailwind components;
     @tailwind utilities;
+
+    body {
+      background-color: #f0f2f5; /* 设置一个类似桌面的浅灰色背景 */
+      color: #333;
+      overflow: hidden; /* 防止滚动 */
+    }
     ```
-  - **步骤 2: 清理首页内容**
-    打开 `src/app/page.tsx` 文件，删除 `main` 标签内的所有内容，替换为一个简单的标题，如下所示：
+  - **步骤 2: 清理主页面**
+    打开 `app/page.tsx` 文件，删除 `<main>` 标签内的所有内容，替换为一个简单的 div，作为桌面容器：
     ```tsx
     export default function Home() {
       return (
-        <main>
-          <h1>我的虚拟桌面</h1>
+        <main className="h-screen w-screen">
+          {/* 桌面内容将在这里构建 */}
         </main>
       );
     }
     ```
-  - **步骤 3: 创建组件文件夹**
-    在 `src` 目录下创建一个名为 `components` 的新文件夹，用于存放后续所有React组件。
-    ```bash
-    mkdir src/components
+  - **步骤 3: 创建文件夹**
+    在项目根目录下创建以下文件夹结构，用于存放组件、数据和静态资源：
+    ```
+    /
+    ├── app/
+    ├── components/      // 可复用组件
+    ├── data/            // 存放模拟数据
+    └── public/
+        └── icons/       // 存放图标文件
     ```
 
-**验收：**
+验收：
 
-  - [ ] 访问 `http://localhost:3000` 页面背景变为纯白，只显示 "我的虚拟桌面" 文字。
-  - [ ] `src` 目录下存在一个空的 `components` 文件夹。
+  - [ ] `http://localhost:3000` 页面变成一个空白的浅灰色页面。
+  - [ ] 项目中已创建 `components`, `data`, 和 `public/icons` 文件夹。
 
-## Phase 1: 场景与核心布局
+## Phase 1: 搭建核心桌面静态布局
 
-### T1.1: 构建窗前桌面场景
+### T1.1: 创建程序坞 (Dock)
 
-  - **步骤 1: 准备背景图**
-    在 `public` 目录下放入一张你喜欢的花园图片，并命名为 `garden-bg.jpg`。
-  - **步骤 2: 创建场景组件**
-    在 `src/components` 目录下创建 `DesktopScene.tsx` 文件，并写入以下代码，用于构建外部容器和窗户效果：
+  - **步骤 1: 创建 Dock 组件文件**
+    在 `components` 文件夹下创建 `Dock.tsx` 文件。
+  - **步骤 2: 编写 Dock 组件代码**
+    粘贴以下代码到 `components/Dock.tsx`。这里我们先用灰色方块作为图标占位符。
     ```tsx
-    // src/components/DesktopScene.tsx
+    // components/Dock.tsx
     import React from 'react';
 
-    interface DesktopSceneProps {
-      children: React.ReactNode;
-    }
+    const dockIcons = ['Skill1', 'Skill2', 'Skill3', 'Skill4']; // 模拟技能图标
 
-    const DesktopScene: React.FC<DesktopSceneProps> = ({ children }) => {
+    const Dock = () => {
       return (
-        <div className="w-full h-screen bg-gray-800 flex items-center justify-center font-sans">
-          {/* Window Frame */}
-          <div className="w-[90%] h-[90%] max-w-6xl max-h-4xl bg-gray-300 rounded-lg shadow-2xl p-4 flex flex-col">
-            {/* Garden Background */}
-            <div 
-              className="flex-grow w-full h-1/2 bg-cover bg-center rounded-md"
-              style={{ backgroundImage: "url('/garden-bg.jpg')" }}
-            ></div>
-            {/* Desk Surface */}
-            <div className="w-full h-1/2 bg-yellow-900/50 pt-8 flex justify-center">
-              {/* Laptop */}
-              <div className="w-[80%] h-full bg-black rounded-t-lg p-2">
-                {children}
-              </div>
-            </div>
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2">
+          <div className="flex items-end justify-center h-16 p-2 space-x-2 bg-white/30 backdrop-blur-md rounded-2xl shadow-lg">
+            {dockIcons.map((icon) => (
+              <div
+                key={icon}
+                className="w-12 h-12 bg-gray-300 rounded-lg cursor-pointer transition-all duration-300 hover:scale-110"
+                title={icon} // 简单的悬停提示
+              ></div>
+            ))}
           </div>
         </div>
       );
     };
 
-    export default DesktopScene;
+    export default Dock;
     ```
-  - **步骤 3: 应用场景组件**
-    修改 `src/app/page.tsx`，引入并使用 `DesktopScene` 组件：
+  - **步骤 3: 在主页面中使用 Dock**
+    修改 `app/page.tsx`，导入并使用 Dock 组件：
     ```tsx
-    // src/app/page.tsx
-    import DesktopScene from '@/components/DesktopScene';
+    // app/page.tsx
+    import Dock from '@/components/Dock';
 
     export default function Home() {
       return (
-        <DesktopScene>
-          {/* This will be our virtual screen content */}
-          <div className="w-full h-full bg-blue-500 rounded-md">
-            虚拟屏幕内容
-          </div>
-        </DesktopScene>
+        <main className="h-screen w-screen relative">
+          {/* 桌面内容 */}
+          <Dock />
+        </main>
       );
     }
     ```
 
-**验收：**
+验收：
 
-  - [ ] 页面展示了一个灰色窗口，上半部分是花园背景图。
-  - [ ] 窗口下半部分是一个深色桌面，上面有一个黑色圆角的“笔记本电脑”，其内部是蓝色的“虚拟屏幕”。
+  - [ ] 页面底部中央出现一个半透明的圆角容器。
+  - [ ] 容器内有4个灰色的方块作为图标占位符。
 
-## Phase 2: 虚拟屏幕与程序坞
+-----
 
-### T2.1: 创建程序坞 (Dock)
+### T1.2: 创建桌面小组件
 
-  - **步骤 1: 创建 Dock 组件**
-    在 `src/components` 目录下创建 `Dock.tsx` 文件，并写入以下代码：
+  - **步骤 1: 创建日历组件**
+    在 `components` 文件夹下创建 `CalendarWidget.tsx` 文件，并粘贴以下代码：
     ```tsx
-    // src/components/Dock.tsx
-    const Dock = () => {
-      const apps = ['Projects', 'AboutMe', 'Contact'];
+    // components/CalendarWidget.tsx
+    'use client'; // 因为使用了 new Date()，这是一个客户端组件
+    import React from 'react';
+
+    const CalendarWidget = () => {
+      const today = new Date();
+      const dateString = today.toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+      const dayString = today.toLocaleDateString('zh-CN', { weekday: 'long' });
 
       return (
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-          <div className="flex items-center space-x-2 p-2 bg-white/20 backdrop-blur-md rounded-xl">
-            {apps.map((app) => (
+        <div className="absolute top-8 right-8 bg-white/50 backdrop-blur-sm p-4 rounded-lg shadow-md w-48 text-center">
+          <p className="text-lg font-semibold">{dateString}</p>
+          <p className="text-2xl font-bold">{dayString}</p>
+        </div>
+      );
+    };
+
+    export default CalendarWidget;
+    ```
+  - **步骤 2: 创建备忘录组件**
+    在 `components` 文件夹下创建 `MemoWidget.tsx` 文件，并粘贴以下代码：
+    ```tsx
+    // components/MemoWidget.tsx
+    import React from 'react';
+
+    const MemoWidget = () => {
+      return (
+        <div className="absolute top-40 right-8 bg-yellow-100/80 backdrop-blur-sm p-4 rounded-lg shadow-md w-48">
+          <h3 className="font-bold border-b border-gray-400 pb-1 mb-2">备忘录</h3>
+          <p className="text-sm">欢迎来到我的数字桌面！</p>
+        </div>
+      );
+    };
+
+    export default MemoWidget;
+    ```
+  - **步骤 3: 在主页面中使用小组件**
+    修改 `app/page.tsx`，导入并使用这两个组件：
+    ```tsx
+    // app/page.tsx
+    import Dock from '@/components/Dock';
+    import CalendarWidget from '@/components/CalendarWidget';
+    import MemoWidget from '@/components/MemoWidget';
+
+    export default function Home() {
+      return (
+        <main className="h-screen w-screen relative">
+          <CalendarWidget />
+          <MemoWidget />
+          <Dock />
+        </main>
+      );
+    }
+    ```
+
+验收：
+
+  - [ ] 页面右上角出现一个显示当前日期的日历卡片。
+  - [ ] 日历下方出现一个黄色的备忘录卡片，显示欢迎词。
+
+-----
+
+### T1.3: 创建桌面图标
+
+  - **步骤 1: 创建桌面图标组件**
+    在 `components` 文件夹下创建 `DesktopIcon.tsx` 文件：
+    ```tsx
+    // components/DesktopIcon.tsx
+    import React from 'react';
+
+    interface DesktopIconProps {
+      label: string;
+    }
+
+    const DesktopIcon = ({ label }: DesktopIconProps) => {
+      return (
+        <div className="flex flex-col items-center justify-center w-24 h-24 text-center cursor-pointer hover:bg-white/20 rounded-md p-2">
+          {/* 这是一个临时的文件夹图标占位符 */}
+          <div className="w-16 h-12 bg-orange-400 rounded-md mb-1"></div>
+          <span className="text-sm text-white font-semibold" style={{ textShadow: '1px 1px 2px black' }}>
+            {label}
+          </span>
+        </div>
+      );
+    };
+
+    export default DesktopIcon;
+    ```
+  - **步骤 2: 在主页面上放置图标**
+    修改 `app/page.tsx`，添加作品集和关于我两个图标：
+    ```tsx
+    // app/page.tsx
+    import Dock from '@/components/Dock';
+    import CalendarWidget from '@/components/CalendarWidget';
+    import MemoWidget from '@/components/MemoWidget';
+    import DesktopIcon from '@/components/DesktopIcon';
+
+    export default function Home() {
+      return (
+        <main className="h-screen w-screen relative p-8">
+          {/* 图标 */}
+          <div className="flex flex-col space-y-4">
+            <DesktopIcon label="我的作品" />
+            <DesktopIcon label="关于我" />
+          </div>
+          
+          <CalendarWidget />
+          <MemoWidget />
+          <Dock />
+        </main>
+      );
+    }
+    ```
+
+验收：
+
+  - [ ] 页面左上角出现两个图标，一个是“我的作品”，另一个是“关于我”。
+  - [ ] 鼠标悬停在图标上时有轻微的背景高亮效果。
+
+## Phase 2: 实现窗口系统与内容交互
+
+### T2.1: 创建可复用窗口组件
+
+  - **步骤 1: 创建 Window 组件文件**
+    在 `components` 文件夹下创建 `Window.tsx` 文件。
+  - **步骤 2: 编写 Window 组件代码**
+    粘贴以下代码，这是一个带标题栏和关闭按钮的基础窗口框架。
+    ```tsx
+    // components/Window.tsx
+    import React from 'react';
+
+    interface WindowProps {
+      title: string;
+      onClose: () => void;
+      children: React.ReactNode;
+    }
+
+    const Window = ({ title, onClose, children }: WindowProps) => {
+      return (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-white rounded-lg shadow-2xl flex flex-col">
+          {/* 标题栏 */}
+          <div className="flex items-center justify-between h-10 bg-gray-200 rounded-t-lg px-4 border-b border-gray-300">
+            <span className="font-semibold">{title}</span>
+            <button
+              onClick={onClose}
+              className="w-6 h-6 bg-red-500 rounded-full hover:bg-red-600 focus:outline-none"
+              aria-label="Close"
+            ></button>
+          </div>
+          {/* 内容区 */}
+          <div className="p-4 flex-grow overflow-y-auto">
+            {children}
+          </div>
+        </div>
+      );
+    };
+
+    export default Window;
+    ```
+
+验收：
+
+  - [ ] `Window.tsx` 组件已创建。
+  - [ ] 组件代码包含标题栏、关闭按钮和内容区域（children）。
+
+-----
+
+### T2.2: 实现窗口的打开与关闭
+
+  - **步骤 1: 在主页面中管理窗口状态**
+    修改 `app/page.tsx`，使用 `useState` 来控制“我的作品”窗口的显示和隐藏。
+    ```tsx
+    // app/page.tsx
+    'use client'; // 添加 'use client' 因为我们使用了 useState
+    import { useState } from 'react';
+    import Dock from '@/components/Dock';
+    import CalendarWidget from '@/components/CalendarWidget';
+    import MemoWidget from '@/components/MemoWidget';
+    import DesktopIcon from '@/components/DesktopIcon';
+    import Window from '@/components/Window'; // 导入 Window 组件
+
+    export default function Home() {
+      const [isProjectsWindowOpen, setProjectsWindowOpen] = useState(false);
+
+      return (
+        <main className="h-screen w-screen relative p-8">
+          <div className="flex flex-col space-y-4">
+            <div onClick={() => setProjectsWindowOpen(true)}>
+              <DesktopIcon label="我的作品" />
+            </div>
+            <DesktopIcon label="关于我" />
+          </div>
+
+          {/* 条件渲染窗口 */}
+          {isProjectsWindowOpen && (
+            <Window title="我的作品" onClose={() => setProjectsWindowOpen(false)}>
+              <p>这里是作品集内容...</p>
+            </Window>
+          )}
+          
+          <CalendarWidget />
+          <MemoWidget />
+          <Dock />
+        </main>
+      );
+    }
+    ```
+
+验收：
+
+  - [ ] 点击“我的作品”桌面图标，会弹出一个居中的窗口。
+  - [ ] 点击窗口标题栏上的红色圆形按钮，窗口会关闭。
+
+-----
+
+### T2.3: 填充作品集与“关于我”内容
+
+  - **步骤 1: 创建模拟数据**
+    在 `data` 文件夹下创建 `projects.ts` 文件：
+    ```ts
+    // data/projects.ts
+    export const projects = [
+      { id: 1, title: '项目一', description: '这是一个非常酷的个人项目。', imageUrl: 'https://via.placeholder.com/150' },
+      { id: 2, title: '项目二', description: '使用 Next.js 和 Tailwind CSS 构建。', imageUrl: 'https://via.placeholder.com/150' },
+      { id: 3, title: '项目三', description: '一个关于数据可视化的作品。', imageUrl: 'https://via.placeholder.com/150' },
+    ];
+    ```
+  - **步骤 2: 创建作品集内容组件**
+    在 `components` 文件夹下创建 `ProjectsContent.tsx` 文件：
+    ```tsx
+    // components/ProjectsContent.tsx
+    import { projects } from '@/data/projects';
+    import Image from 'next/image';
+
+    const ProjectsContent = () => {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {projects.map(project => (
+            <div key={project.id} className="border rounded-lg p-3">
+              <Image src={project.imageUrl} alt={project.title} width={150} height={150} className="w-full h-auto rounded-md" />
+              <h3 className="font-bold mt-2">{project.title}</h3>
+              <p className="text-sm text-gray-600">{project.description}</p>
+            </div>
+          ))}
+        </div>
+      );
+    };
+
+    export default ProjectsContent;
+    ```
+  - **步骤 3: 更新主页面逻辑**
+    修改 `app/page.tsx`，添加“关于我”窗口的状态，并在两个窗口中分别使用对应的内容组件。
+    ```tsx
+    // app/page.tsx (只展示修改部分)
+    'use client';
+    import { useState } from 'react';
+    // ... 其他 imports
+    import Window from '@/components/Window';
+    import ProjectsContent from '@/components/ProjectsContent'; // 导入新组件
+
+    export default function Home() {
+      const [isProjectsWindowOpen, setProjectsWindowOpen] = useState(false);
+      const [isAboutWindowOpen, setAboutWindowOpen] = useState(false); // 新增状态
+
+      return (
+        <main className="h-screen w-screen relative p-8">
+          <div className="flex flex-col space-y-4">
+            <div onClick={() => setProjectsWindowOpen(true)}>
+              <DesktopIcon label="我的作品" />
+            </div>
+            <div onClick={() => setAboutWindowOpen(true)}> {/* 新增点击事件 */}
+              <DesktopIcon label="关于我" />
+            </div>
+          </div>
+
+          {isProjectsWindowOpen && (
+            <Window title="我的作品" onClose={() => setProjectsWindowOpen(false)}>
+              <ProjectsContent /> {/* 使用作品集组件 */}
+            </Window>
+          )}
+
+          {isAboutWindowOpen && (
+            <Window title="关于我" onClose={() => setAboutWindowOpen(false)}>
+              {/* 关于我内容 */}
+              <div>
+                <h2 className="text-2xl font-bold mb-4">关于我</h2>
+                <p>你好！我是一名热爱技术的开发者...</p>
+              </div>
+            </Window>
+          )}
+          
+          {/* ... 其他组件 ... */}
+          <Dock />
+        </main>
+      );
+    }
+    ```
+
+验收：
+
+  - [ ] 点击“我的作品”图标，弹出的窗口中会显示3个模拟项目。
+  - [ ] 点击“关于我”图标，会弹出另一个显示个人简介的窗口。
+  - [ ] 两个窗口可以独立打开和关闭。
+
+## Phase 3: 完善核心交互与动效
+
+### T3.1: 实现沉浸式进入动效
+
+  - **步骤 1: 创建开屏组件**
+    在 `components` 文件夹创建 `SplashScreen.tsx` 文件：
+    ```tsx
+    // components/SplashScreen.tsx
+    import React from 'react';
+
+    interface SplashScreenProps {
+      onEnter: () => void;
+    }
+
+    const SplashScreen = ({ onEnter }: SplashScreenProps) => {
+      return (
+        <div className="absolute inset-0 bg-black flex flex-col items-center justify-center text-white z-50">
+          <h1 className="text-4xl mb-8">个人数字桌面</h1>
+          <button
+            onClick={onEnter}
+            className="px-8 py-3 border border-orange-500 text-orange-500 rounded-lg hover:bg-orange-500 hover:text-white transition-colors"
+          >
+            ENTER
+          </button>
+        </div>
+      );
+    };
+    export default SplashScreen;
+    ```
+  - **步骤 2: 在主页面管理加载状态**
+    修改 `app/page.tsx`，引入一个新的状态来控制显示开屏还是桌面。
+    ```tsx
+    // app/page.tsx (只展示修改部分)
+    'use client';
+    import { useState, useEffect } from 'react';
+    import SplashScreen from '@/components/SplashScreen'; // 导入开屏组件
+    // ... 其他 imports
+
+    export default function Home() {
+      const [isDesktopVisible, setDesktopVisible] = useState(false);
+      const [isProjectsWindowOpen, setProjectsWindowOpen] = useState(false);
+      const [isAboutWindowOpen, setAboutWindowOpen] = useState(false);
+
+      const handleEnter = () => {
+        // 在这里可以添加更复杂的动画逻辑，目前先直接切换
+        setDesktopVisible(true);
+      };
+
+      if (!isDesktopVisible) {
+        return <SplashScreen onEnter={handleEnter} />;
+      }
+
+      return (
+        <main className="h-screen w-screen relative p-8 animate-fadeIn"> {/* 使用动画 */}
+          {/* ... 桌面所有组件 ... */}
+        </main>
+      );
+    }
+    ```
+  - **步骤 3: 添加简单的淡入动画**
+    在 `app/globals.css` 文件中添加一个简单的淡入动画效果：
+    ```css
+    /* app/globals.css */
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+    /* ... body 样式 ... */
+
+    @keyframes fadeIn {
+      from { opacity: 0; filter: blur(10px); }
+      to { opacity: 1; filter: blur(0px); }
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn 1.5s ease-out forwards;
+    }
+    ```
+
+验收：
+
+  - [ ] 首次加载页面时，显示的是黑色的开屏界面和 "ENTER" 按钮。
+  - [ ] 点击 "ENTER" 按钮后，开屏界面消失，桌面内容以淡入和去模糊的效果出现。
+
+-----
+
+### T3.2: 实现 Dock 悬停交互
+
+  - **步骤 1: 创建技能数据**
+    在 `data` 文件夹下创建 `skills.ts` 文件：
+    ```ts
+    // data/skills.ts
+    export const skills = [
+      { name: 'React', icon: 'R', relatedProjects: ['项目二'] },
+      { name: 'Next.js', icon: 'N', relatedProjects: ['项目二'] },
+      { name: 'Tailwind CSS', icon: 'T', relatedProjects: ['项目二'] },
+      { name: 'TypeScript', icon: 'TS', relatedProjects: [] },
+    ];
+    ```
+  - **步骤 2: 更新 Dock 组件**
+    修改 `components/Dock.tsx`，使其能够处理悬停状态并显示提示。
+    ```tsx
+    // components/Dock.tsx
+    'use client';
+    import { useState } from 'react';
+    import { skills } from '@/data/skills';
+
+    const Dock = () => {
+      const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+
+      return (
+        <div
+          className="fixed bottom-4 left-1/2 -translate-x-1/2"
+          onMouseLeave={() => setHoveredSkill(null)} // 鼠标离开整个 Dock 区域时清除悬停状态
+        >
+          <div className="flex items-end justify-center h-16 p-2 space-x-2 bg-white/30 backdrop-blur-md rounded-2xl shadow-lg">
+            {skills.map((skill) => (
               <div
-                key={app}
-                className="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+                key={skill.name}
+                className="relative flex items-center justify-center w-12 h-12 bg-gray-300 rounded-lg cursor-pointer transition-all duration-300 hover:scale-110"
+                onMouseEnter={() => setHoveredSkill(skill.name)}
               >
-                {app.substring(0, 2)}
+                <span className="font-bold text-xl">{skill.icon}</span>
+
+                {/* 悬停时显示的提示 */}
+                {hoveredSkill === skill.name && (
+                  <div className="absolute bottom-full mb-3 px-3 py-2 bg-black text-white text-sm rounded-md shadow-lg whitespace-nowrap">
+                    <p className="font-bold">{skill.name}</p>
+                    {skill.relatedProjects.length > 0 && (
+                      <ul className="list-disc list-inside">
+                        {skill.relatedProjects.map(p => <li key={p}>{p}</li>)}
+                      </ul>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -149,403 +578,50 @@
 
     export default Dock;
     ```
-  - **步骤 2: 创建虚拟屏幕组件**
-    在 `src/components` 目录下创建 `VirtualScreen.tsx` 文件，用于整合虚拟屏幕内的所有元素：
-    ```tsx
-    // src/components/VirtualScreen.tsx
-    import Dock from './Dock';
 
-    const VirtualScreen = () => {
-      return (
-        <div className="relative w-full h-full bg-cover bg-center rounded-md" style={{ backgroundImage: "url('/macos-bg.jpg')" }}>
-          {/* Screen Content will go here */}
-          
-          <Dock />
-        </div>
-      );
-    };
+验收：
 
-    export default VirtualScreen;
-    ```
-    *(注：请在 `public` 目录下准备一张名为 `macos-bg.jpg` 的壁纸图片)*
-  - **步骤 3: 整合到主页面**
-    修改 `src/app/page.tsx`，用 `VirtualScreen` 替换掉之前的蓝色 div：
-    ```tsx
-    // src/app/page.tsx
-    import DesktopScene from '@/components/DesktopScene';
-    import VirtualScreen from '@/components/VirtualScreen';
+  - [ ] Dock 中的图标变成了技能首字母。
+  - [ ] 鼠标悬停在技能图标上时，图标上方会弹出一个黑色的提示框。
+  - [ ] 提示框中会显示技能名称和关联的项目列表（如果存在）。
 
-    export default function Home() {
-      return (
-        <DesktopScene>
-          <VirtualScreen />
-        </DesktopScene>
-      );
-    }
-    ```
+## Phase 4: 部署
 
-**验收：**
+### T4.1: 推送到 GitHub
 
-  - [ ] 虚拟屏幕区域显示了你选择的壁纸图片。
-  - [ ] 屏幕底部中央出现了一个半透明的程序坞，包含三个灰色图标。
-  - [ ] 鼠标悬停在图标上时，有轻微的放大效果。
-
-### T2.2: 创建可交互窗口
-
-  - **步骤 1: 创建窗口组件**
-    在 `src/components` 目录下创建 `Window.tsx` 文件：
-    ```tsx
-    // src/components/Window.tsx
-    import React from 'react';
-
-    interface WindowProps {
-      title: string;
-      children: React.ReactNode;
-      onClose: () => void;
-    }
-
-    const Window: React.FC<WindowProps> = ({ title, children, onClose }) => {
-      return (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 max-w-2xl bg-white/80 backdrop-blur-lg rounded-lg shadow-lg flex flex-col transition-all duration-300">
-          {/* Title Bar */}
-          <div className="w-full h-8 bg-gray-200/90 rounded-t-lg flex items-center px-2">
-            <div className="flex space-x-2">
-              <button onClick={onClose} className="w-3 h-3 bg-red-500 rounded-full"></button>
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            </div>
-            <p className="text-center flex-grow text-sm font-medium text-gray-700">{title}</p>
-          </div>
-          {/* Content */}
-          <div className="p-4 overflow-y-auto">
-            {children}
-          </div>
-        </div>
-      );
-    };
-
-    export default Window;
-    ```
-  - **步骤 2: 使用状态管理窗口**
-    修改 `src/components/VirtualScreen.tsx`，引入 `useState` 和 `Window` 组件，并添加点击 Dock 打开窗口的逻辑：
-    ```tsx
-    // src/components/VirtualScreen.tsx
-    'use client'; // Add this at the top
-
-    import { useState } from 'react';
-    import Dock from './Dock';
-    import Window from './Window';
-
-    const VirtualScreen = () => {
-      const [openWindow, setOpenWindow] = useState<string | null>(null);
-
-      const apps = [
-        { id: 'Projects', title: '我的作品' },
-        { id: 'AboutMe', title: '关于我.pdf' },
-        { id: 'Contact', title: '咨询申请.docx' },
-      ];
-
-      return (
-        <div className="relative w-full h-full bg-cover bg-center rounded-md" style={{ backgroundImage: "url('/macos-bg.jpg')" }}>
-          
-          {/* Windows rendering */}
-          {openWindow === 'Projects' && (
-            <Window title="我的作品" onClose={() => setOpenWindow(null)}>
-              <p>作品列表将在这里展示。</p>
-            </Window>
-          )}
-          {openWindow === 'AboutMe' && (
-            <Window title="关于我.pdf" onClose={() => setOpenWindow(null)}>
-              <p>个人简介内容。</p>
-            </Window>
-          )}
-          {openWindow === 'Contact' && (
-            <Window title="咨询申请.docx" onClose={() => setOpenWindow(null)}>
-              <p>联系表单将在这里展示。</p>
-            </Window>
-          )}
-          
-          {/* Dock rendering */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-            <div className="flex items-center space-x-2 p-2 bg-white/20 backdrop-blur-md rounded-xl">
-              {apps.map((app) => (
-                <div
-                  key={app.id}
-                  onClick={() => setOpenWindow(app.id)}
-                  className="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
-                  title={app.title}
-                >
-                  {app.id.substring(0, 2)}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    export default VirtualScreen;
-    ```
-
-**验收：**
-
-  - [ ] 点击程序坞中的任意一个图标，屏幕中央会弹出一个带有标题栏的窗口。
-  - [ ] 点击窗口左上角的红色按钮，该窗口会关闭。
-  - [ ] 同一时间只能显示一个窗口。
-
-## Phase 3: 内容填充
-
-### T3.1: 填充“关于我”和“作品集”内容
-
-  - **步骤 1: 准备作品数据**
-    在 `src` 目录下创建一个 `data.ts` 文件，用于存放项目信息：
-    ```ts
-    // src/data.ts
-    export const projects = [
-      {
-        id: 1,
-        title: '项目一',
-        description: '这是项目一的详细描述...',
-        imageUrl: '[https://via.placeholder.com/300](https://via.placeholder.com/300)', // 替换为你的项目图片链接
-      },
-      {
-        id: 2,
-        title: '项目二',
-        description: '这是项目二的详细描述...',
-        imageUrl: '[https://via.placeholder.com/300](https://via.placeholder.com/300)',
-      },
-    ];
-    ```
-  - **步骤 2: 更新 VirtualScreen 以展示内容**
-    修改 `src/components/VirtualScreen.tsx`，导入数据并填充到对应的窗口中：
-    ```tsx
-    // src/components/VirtualScreen.tsx
-    // ... imports
-    import { projects } from '@/data'; // 导入项目数据
-    import Image from 'next/image'; // 导入 Image 组件
-
-    // ... inside VirtualScreen component
-
-    // Replace window content
-    {openWindow === 'Projects' && (
-      <Window title="我的作品" onClose={() => setOpenWindow(null)}>
-        <ul className="space-y-4">
-          {projects.map(project => (
-            <li key={project.id} className="p-2 border rounded-md hover:bg-gray-100">
-              <h3 className="font-bold">{project.title}</h3>
-              <p className="text-sm text-gray-600">{project.description}</p>
-              <Image src={project.imageUrl} alt={project.title} width={300} height={150} className="mt-2 rounded" />
-            </li>
-          ))}
-        </ul>
-      </Window>
-    )}
-    {openWindow === 'AboutMe' && (
-      <Window title="关于我.pdf" onClose={() => setOpenWindow(null)}>
-        <div className="p-4">
-          <h2 className="text-xl font-bold mb-2">环宇 (Your Name)</h2>
-          <p>这里是你的个人简介。一名充满激情的前端开发者，致力于打造美观且用户友好的Web应用。擅长 React、Next.js 和 Tailwind CSS。</p>
-          <p className="mt-4">欢迎通过联系表单与我交流！</p>
-        </div>
-      </Window>
-    )}
-    // ... rest of the component
-    ```
-
-**验收：**
-
-  - [ ] 点击 "关于我" 图标，窗口中能正确显示个人简介文本。
-  - [ ] 点击 "作品集" 图标，窗口中能以列表形式展示 `data.ts` 中定义的项目信息（图片和文字）。
-
-### T3.2: 集成联系表单
-
-  - **步骤 1: 获取 Tally.so 表单链接**
-    前往 [Tally.so](https://tally.so/) 官网，注册并创建一个简单的联系表单（例如包含姓名、邮箱、消息字段）。创建完成后，点击 "Share" 并选择 "Embed"，复制嵌入链接 (URL)。
-  - **步骤 2: 将表单嵌入窗口**
-    修改 `src/components/VirtualScreen.tsx` 中 "Contact" 窗口的内容，使用 `iframe` 嵌入 Tally 表单：
-    ```tsx
-    // ... inside VirtualScreen component
-
-    {openWindow === 'Contact' && (
-      <Window title="咨询申请.docx" onClose={() => setOpenWindow(null)}>
-        <iframe
-          src="YOUR_TALLY_EMBED_URL" // <--- 替换成你的 Tally 表单链接
-          className="w-full h-full border-0"
-          title="Contact Form"
-        ></iframe>
-      </Window>
-    )}
-
-    // ... rest of the component
-    ```
-  - **步骤 3: 调整窗口组件以适应 iframe**
-    修改 `src/components/Window.tsx`，让内容区域可以完全填充，以容纳 iframe。将 `<div className="p-4 overflow-y-auto">` 修改为 `<div className="p-1 flex-grow">`：
-    ```tsx
-    // src/components/Window.tsx
-
-    // ... inside Window component
-    {/* Content */}
-    <div className="p-1 flex-grow">
-      {children}
-    </div>
-    ```
-
-**验收：**
-
-  - [ ] 点击 "联系" 图标，窗口中成功加载并显示了 Tally.so 表单。
-  - [ ] 在表单中填写内容并提交，能在 Tally.so 的后台看到提交的数据。
-
-## Phase 4: 桌面小组件与响应式
-
-### T4.1: 实现日历和备忘录小组件
-
-  - **步骤 1: 创建小组件**
-    在 `src/components` 中创建 `Widgets.tsx` 文件，包含日历和备忘录：
-    ```tsx
-    // src/components/Widgets.tsx
-    'use client';
-    import { useEffect, useState } from 'react';
-
-    export const CalendarWidget = () => {
-      const [date, setDate] = useState(new Date());
-      
-      useEffect(() => {
-        // For accuracy, though not strictly needed for just the date
-        const timer = setInterval(() => setDate(new Date()), 60000);
-        return () => clearInterval(timer);
-      }, []);
-
-      const day = date.getDate();
-      const dayName = date.toLocaleDateString('zh-CN', { weekday: 'long' });
-
-      return (
-        <div className="absolute top-8 right-8 w-24 h-24 bg-white/80 backdrop-blur-md rounded-lg flex flex-col items-center justify-center text-black shadow-md">
-          <p className="text-xs">{dayName}</p>
-          <p className="text-4xl font-bold">{day}</p>
-        </div>
-      );
-    };
-
-    export const MemoWidget = () => {
-      return (
-        <div className="absolute top-8 left-8 w-48 p-3 bg-yellow-200/80 backdrop-blur-md rounded-lg shadow-md text-sm text-gray-800">
-          <p className="font-bold mb-1">备忘录</p>
-          <p>欢迎来到我的创意空间！点击下方的图标来了解更多关于我的信息。</p>
-        </div>
-      );
-    };
-    ```
-  - **步骤 2: 添加到虚拟屏幕**
-    在 `src/components/VirtualScreen.tsx` 中引入并使用这两个小组件：
-    ```tsx
-    // src/components/VirtualScreen.tsx
-    // ... imports
-    import { CalendarWidget, MemoWidget } from './Widgets';
-
-    // ... inside VirtualScreen component
-    return (
-      <div className="relative ...">
-        <CalendarWidget />
-        <MemoWidget />
-        
-        {/* Windows rendering... */}
-        {/* Dock rendering... */}
-      </div>
-    );
-    ```
-
-**验收：**
-
-  - [ ] 虚拟屏幕的右上角出现一个显示当天日期的日历小组件。
-  - [ ] 虚拟屏幕的左上角出现一个黄色的备忘录小组件，显示固定的欢迎词。
-
-### T4.2: 实现基础响应式设计
-
-  - **步骤 1: 调整主页面布局**
-    修改 `src/app/page.tsx`，使用 Tailwind CSS 的响应式前缀 (`md:`) 来在小屏幕设备上隐藏外部桌面场景：
-    ```tsx
-    // src/app/page.tsx
-    import DesktopScene from '@/components/DesktopScene';
-    import VirtualScreen from '@/components/VirtualScreen';
-
-    export default function Home() {
-      return (
-        <main>
-          {/* Hidden on mobile, shown on medium screens and up */}
-          <div className="hidden md:block">
-            <DesktopScene>
-              <VirtualScreen />
-            </DesktopScene>
-          </div>
-          
-          {/* Shown on mobile, hidden on medium screens and up */}
-          <div className="block md:hidden w-full h-screen">
-            <VirtualScreen />
-          </div>
-        </main>
-      );
-    }
-    ```
-  - **步骤 2: 调整窗口在移动端的尺寸**
-    修改 `src/components/Window.tsx`，让窗口在移动端全屏显示：
-    ```tsx
-    // src/components/Window.tsx
-    // ... inside Window component
-    return (
-      <div className="absolute top-0 left-0 w-full h-full md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-3/4 md:h-3/4 max-w-2xl bg-white/80 backdrop-blur-lg md:rounded-lg shadow-lg flex flex-col transition-all duration-300">
-        {/* ... rest of the component */}
-      </div>
-    );
-    ```
-
-**验收：**
-
-  - [ ] 在桌面浏览器中，网站显示完整的“窗前桌面”场景。
-  - [ ] 使用浏览器的开发者工具切换到手机视图（例如 iPhone 12），外部场景消失，只直接展示“虚拟屏幕”的内容。
-  - [ ] 在手机视图下打开一个窗口，该窗口会占满整个屏幕。
-
-## Phase 5: 部署
-
-### T5.1: 推送到 GitHub
-
-  - **步骤 1: 初始化 Git**
+  - **步骤 1: 创建 GitHub 仓库**
+    在 GitHub.com 上创建一个新的空仓库（例如 `digital-desktop-portfolio`）。
+  - **步骤 2: 初始化本地 Git 仓库并推送**
+    在你的项目根目录打开终端，运行以下命令（请将 `YOUR_USERNAME` 和 `YOUR_REPONAME` 替换为你的 GitHub 用户名和仓库名）：
     ```bash
-    git init
+    git init -b main
     git add .
-    git commit -m "Initial commit: MVP complete"
-    ```
-  - **步骤 2: 创建 GitHub 仓库**
-    在 [GitHub](https://github.com/) 上创建一个新的空仓库（不要勾选 `README` 或 `.gitignore`）。
-  - **步骤 3: 关联并推送代码**
-    复制你新仓库的地址，并在终端执行以下命令：
-    ```bash
-    git remote add origin YOUR_GITHUB_REPOSITORY_URL.git
-    git branch -M main
+    git commit -m "Initial commit: Setup project and basic features"
+    git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPONAME.git
     git push -u origin main
     ```
 
-**验收：**
+验收：
 
-  - [ ] 你的所有项目代码都已成功上传到 GitHub 仓库。
+  - [ ] 你的代码已成功推送到 GitHub 仓库。
+  - [ ] 在 GitHub 仓库页面上可以看到你的项目文件。
 
-### T5.2: 部署到 Vercel
+-----
+
+### T4.2: 部署到 Vercel
 
   - **步骤 1: 注册并登录 Vercel**
-    使用你的 GitHub 账户在 [Vercel](https://vercel.com/) 官网上注册并登录。
+    使用你的 GitHub 账户在 [Vercel.com](https://vercel.com/) 上注册并登录。
   - **步骤 2: 导入项目**
-    在 Vercel 的 Dashboard 页面，点击 "Add New..." -\> "Project"。从列表中找到并选择你刚刚推送的 GitHub 仓库，点击 "Import"。
+    在 Vercel 的控制面板上，点击 "Add New..." -\> "Project"。
+    选择 "Continue with Git"，然后找到并选择你刚刚创建的 GitHub 仓库。
   - **步骤 3: 配置并部署**
-    Vercel 会自动识别出这是 Next.js 项目，通常无需任何额外配置。直接点击 "Deploy" 按钮。
+    Vercel 会自动检测到这是一个 Next.js 项目，你无需修改任何配置。直接点击 "Deploy" 按钮。
   - **步骤 4: 等待部署完成**
-    Vercel 将会自动构建并部署你的网站。完成后，会提供一个公开的 URL。
+    Vercel 会自动安装依赖、构建项目并进行部署。完成后，会提供一个公开的 URL。
 
-**验收：**
+验收：
 
-  - [ ] Vercel 上的部署过程没有报错并成功完成。
-  - [ ] 你可以通过 Vercel 提供的 `*.vercel.app` 域名公开访问你的创意桌面网站。
-  - [ ] 网站在公开域名上的所有功能都和本地开发时一样正常。
-
-<!-- end list -->
-
-```
-```
+  - [ ] 项目成功部署到 Vercel，并获得一个 `.vercel.app` 的域名。
+  - [ ] 打开该域名，网站功能与本地开发环境（`localhost:3000`）完全一致。
+  - [ ] 从开屏动画到打开/关闭窗口的所有功能均可正常使用。

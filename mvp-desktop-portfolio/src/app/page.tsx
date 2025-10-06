@@ -1,52 +1,88 @@
-import DesktopScene from '@/components/DesktopScene';
+'use client';
+import { useState } from 'react';
+import Dock from '@/components/Dock';
+import CalendarWidget from '@/components/CalendarWidget';
+import MemoWidget from '@/components/MemoWidget';
+import DesktopIcon from '@/components/DesktopIcon';
+import Window from '@/components/Window';
+import ProjectsContent from '@/components/ProjectsContent';
 
 export default function Home() {
+  const [isProjectsWindowOpen, setProjectsWindowOpen] = useState(false);
+  const [isAboutWindowOpen, setAboutWindowOpen] = useState(false);
+
   return (
-    <DesktopScene>
-      {/* macOS 风格的虚拟桌面 */}
-      <div className="w-full h-full bg-gradient-to-br from-blue-400 via-purple-500 to-pink-400 relative overflow-hidden">
-        {/* 桌面壁纸渐变 */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-400 to-pink-500 opacity-80"></div>
-        
-        {/* 桌面图标 */}
-        <div className="absolute top-8 left-8 flex flex-col space-y-4">
-          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-            <div className="text-2xl">📁</div>
-          </div>
-          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-            <div className="text-2xl">📄</div>
-          </div>
+    <main className="h-screen w-screen relative" style={{ 
+      backgroundImage: 'url(/desktop-bg.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
+      {/* 图标 */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+        position: 'absolute',
+        top: '32px',
+        right: '32px'
+      }}>
+        <div onClick={() => setProjectsWindowOpen(true)}>
+          <DesktopIcon label="我的作品" type="folder" />
         </div>
-
-        {/* 程序坞 (Dock) */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-          <div className="flex items-center space-x-2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-2xl shadow-lg">
-            <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
-              <div className="text-lg">💼</div>
-            </div>
-            <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
-              <div className="text-lg">👤</div>
-            </div>
-            <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
-              <div className="text-lg">📧</div>
-            </div>
-          </div>
-        </div>
-
-        {/* 桌面小组件 */}
-        {/* 日历小组件 */}
-        <div className="absolute top-8 right-8 w-24 h-24 bg-white/20 backdrop-blur-md rounded-xl flex flex-col items-center justify-center shadow-lg">
-          <div className="text-xs text-white/80">今天</div>
-          <div className="text-2xl font-bold text-white">5</div>
-          <div className="text-xs text-white/80">十月</div>
-        </div>
-
-        {/* 备忘录小组件 */}
-        <div className="absolute top-32 right-8 w-48 p-3 bg-yellow-200/80 backdrop-blur-md rounded-xl shadow-lg">
-          <div className="text-sm font-bold text-gray-800 mb-1">备忘录</div>
-          <div className="text-xs text-gray-700">欢迎来到我的创意空间！</div>
+        <div onClick={() => setAboutWindowOpen(true)}>
+          <DesktopIcon label="关于我" type="pdf" />
         </div>
       </div>
-    </DesktopScene>
+
+      {/* 条件渲染窗口 */}
+      {isProjectsWindowOpen && (
+        <Window title="我的作品" onClose={() => setProjectsWindowOpen(false)}>
+          <ProjectsContent />
+        </Window>
+      )}
+
+      {isAboutWindowOpen && (
+        <Window title="关于我" onClose={() => setAboutWindowOpen(false)}>
+          <div>
+            <h2 style={{
+              fontSize: '24px',
+              fontWeight: 'bold',
+              marginBottom: '16px',
+              color: '#1d1d1f'
+            }}>
+              关于我
+            </h2>
+            <p style={{
+              fontSize: '16px',
+              lineHeight: '1.6',
+              color: '#424242',
+              marginBottom: '16px'
+            }}>
+              你好！我是一名热爱技术的开发者，专注于前端开发和用户体验设计。
+            </p>
+            <p style={{
+              fontSize: '16px',
+              lineHeight: '1.6',
+              color: '#424242',
+              marginBottom: '16px'
+            }}>
+              我擅长使用 React、Next.js、TypeScript 等现代技术栈构建高质量的 Web 应用。
+            </p>
+            <p style={{
+              fontSize: '16px',
+              lineHeight: '1.6',
+              color: '#424242'
+            }}>
+              欢迎查看我的作品集，了解我的项目经验和技术能力。
+            </p>
+          </div>
+        </Window>
+      )}
+      
+      <CalendarWidget />
+      <MemoWidget />
+      <Dock />
+    </main>
   );
 }
