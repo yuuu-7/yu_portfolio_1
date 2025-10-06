@@ -1,0 +1,35 @@
+---
+globs: *.ts,*.tsx,*.js,*.jsx
+description: 代码规范和最佳实践
+---
+
+# 代码规范
+
+## TypeScript 规范
+- 始终使用 TypeScript，避免使用 `any` 类型
+- 为所有组件定义明确的 Props 接口
+- 使用 `'use client'` 指令标记客户端组件
+- 优先使用函数式组件和 React Hooks
+
+## React 组件规范
+- 组件文件使用 PascalCase 命名（如 `DesktopScene.tsx`）
+- 组件内部使用 camelCase 命名变量和函数
+- 使用 `React.FC<Props>` 类型定义组件
+- 为所有事件处理函数添加明确的类型注解
+
+## Tailwind CSS 规范
+- 优先使用 Tailwind 工具类，避免自定义 CSS
+- 使用语义化的颜色类名（如 `bg-gray-800` 而不是 `bg-[#1f2937]`）
+- 响应式设计使用 `md:` 前缀
+- 使用 `backdrop-blur` 和 `bg-white/80` 等现代视觉效果
+
+## 文件组织
+- 所有组件放在 `src/components/` 目录
+- 数据文件放在 `src/data.ts`
+- 图片资源放在 `public/` 目录
+- 使用 `@/` 别名导入组件
+
+## 代码注释
+- 为复杂逻辑添加中文注释
+- 组件顶部添加功能说明
+- 关键交互逻辑需要解释

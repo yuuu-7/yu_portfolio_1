@@ -1,0 +1,28 @@
+---
+alwaysApply: true
+description: 个人创意桌面网站项目结构指南
+---
+
+# 项目结构指南
+
+这是一个基于 Next.js + TypeScript + Tailwind CSS 的个人创意桌面网站项目。
+
+## 核心文件结构
+- 主入口点：[src/app/page.tsx](mdc:src/app/page.tsx) - 应用的主页面
+- 项目配置：[mvp.md](mdc:mvp.md) - MVP 功能需求文档
+- 任务清单：[tasks.md](mdc:tasks.md) - 详细的开发任务步骤
+
+## 组件架构
+- 场景组件：[src/components/DesktopScene.tsx](mdc:src/components/DesktopScene.tsx) - 窗前桌面场景
+- 虚拟屏幕：[src/components/VirtualScreen.tsx](mdc:src/components/VirtualScreen.tsx) - macOS 风格虚拟屏幕
+- 程序坞：[src/components/Dock.tsx](mdc:src/components/Dock.tsx) - 底部应用图标栏
+- 窗口组件：[src/components/Window.tsx](mdc:src/components/Window.tsx) - 可交互的弹窗窗口
+- 小组件：[src/components/Widgets.tsx](mdc:src/components/Widgets.tsx) - 日历和备忘录小组件
+
+## 数据管理
+- 项目数据：[src/data.ts](mdc:src/data.ts) - 作品集和项目信息
+
+## 设计理念
+- 核心创意：虚拟 macOS 桌面 + 窗前花园场景
+- 沉浸式体验：通过窗外花园背景营造温馨氛围
+- 交互设计：类 macOS 的精致、干净质感
