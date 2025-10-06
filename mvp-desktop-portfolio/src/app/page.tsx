@@ -145,7 +145,7 @@ export default function Home() {
         </main>
       )}
       
-      {/* 全黑覆盖层 - 只在扩散完成后显示 */}
+      {/* 加载过渡层 - 只在扩散完成后显示 */}
       {isLoading && !isExpanding && (
         <div 
           className="fixed inset-0 w-full h-full z-50 transition-all duration-1000"
@@ -161,7 +161,60 @@ export default function Home() {
             zIndex: 9998,
             opacity: isLoading ? 1 : 0
           }}
-        />
+        >
+          {/* 毛玻璃进度条容器 */}
+          <div 
+            className="absolute bottom-0 left-0 w-full h-20 flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%)',
+              backdropFilter: 'blur(20px)',
+              borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+            }}
+          >
+            {/* 进度条背景 */}
+            <div 
+              className="relative w-80 h-2 rounded-full overflow-hidden"
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 0 20px rgba(0, 0, 0, 0.3)'
+              }}
+            >
+              {/* 进度条填充 */}
+              <div 
+                className="h-full rounded-full transition-all duration-300 ease-out"
+                style={{
+                  background: 'linear-gradient(90deg, rgba(251, 146, 60, 0.8) 0%, rgba(251, 146, 60, 0.6) 50%, rgba(251, 146, 60, 0.4) 100%)',
+                  width: `${progress}%`,
+                  boxShadow: '0 0 15px rgba(251, 146, 60, 0.5)',
+                  filter: 'blur(0.5px)'
+                }}
+              />
+              
+              {/* 进度条光效 */}
+              <div 
+                className="absolute top-0 left-0 h-full rounded-full transition-all duration-300 ease-out"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%)',
+                  width: `${progress}%`,
+                  animation: 'progressShine 2s ease-in-out infinite'
+                }}
+              />
+            </div>
+            
+            {/* 进度百分比文字 */}
+            <div 
+              className="absolute bottom-8 text-white text-sm font-medium"
+              style={{
+                textShadow: '0 0 10px rgba(0, 0, 0, 0.8)',
+                fontFamily: 'Helvetica, Arial, sans-serif'
+              }}
+            >
+              {Math.round(progress)}%
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

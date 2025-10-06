@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 自定义字体定义 */
+@font-face {
+  font-family: 'Helvetica-Bold';
+  src: url('/fonts/Helvetica-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans SC';
+  src: url('/fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -201,5 +218,20 @@ html, body {
   100% {
     transform: translate(-50%, -50%) scale(60);
     opacity: 1;
+  }
+}
+
+/* 进度条光效动画 */
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
   }
 }
