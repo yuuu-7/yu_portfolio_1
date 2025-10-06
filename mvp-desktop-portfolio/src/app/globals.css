@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
   background-color: #f0f2f5; /* 设置一个类似桌面的浅灰色背景 */
   color: #333;
   overflow: hidden; /* 防止滚动 */
@@ -15,4 +19,187 @@ body {
 
 .animate-fadeIn {
   animation: fadeIn 1.5s ease-out forwards;
+}
+
+@keyframes expandCircle {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 1;
+  }
+}
+
+@keyframes expandCircleFromButton {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  5% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  15% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 1;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(4);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(8);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(15);
+    opacity: 1;
+  }
+  85% {
+    transform: translate(-50%, -50%) scale(25);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(40);
+    opacity: 1;
+  }
+}
+
+/* 星云流动动画 - 模拟分形布朗噪声效果 */
+@keyframes nebulaFlow {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: blur(60px) hue-rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(90deg);
+    filter: blur(65px) hue-rotate(15deg);
+  }
+  50% {
+    transform: scale(0.9) rotate(180deg);
+    filter: blur(55px) hue-rotate(30deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(270deg);
+    filter: blur(62px) hue-rotate(15deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    filter: blur(60px) hue-rotate(0deg);
+  }
+}
+
+/* 呼吸效果动画 - 模拟sin函数周期变化，更加丝滑 */
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+    opacity: 0.85;
+    filter: brightness(1);
+  }
+  12.5% {
+    transform: scale(1.02);
+    opacity: 0.88;
+    filter: brightness(1.05);
+  }
+  25% {
+    transform: scale(1.04);
+    opacity: 0.92;
+    filter: brightness(1.08);
+  }
+  37.5% {
+    transform: scale(1.06);
+    opacity: 0.95;
+    filter: brightness(1.12);
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+    filter: brightness(1.15);
+  }
+  62.5% {
+    transform: scale(1.06);
+    opacity: 0.95;
+    filter: brightness(1.12);
+  }
+  75% {
+    transform: scale(1.04);
+    opacity: 0.92;
+    filter: brightness(1.08);
+  }
+  87.5% {
+    transform: scale(1.02);
+    opacity: 0.88;
+    filter: brightness(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+    filter: brightness(1);
+  }
+}
+
+/* 按钮主体呼吸效果 - 更加丝滑 */
+@keyframes buttonBreathe {
+  0% {
+    transform: scale(1);
+    filter: blur(3px) brightness(1);
+  }
+  25% {
+    transform: scale(1.01);
+    filter: blur(3.1px) brightness(1.05);
+  }
+  50% {
+    transform: scale(1.02);
+    filter: blur(3.2px) brightness(1.1);
+  }
+  75% {
+    transform: scale(1.01);
+    filter: blur(3.1px) brightness(1.05);
+  }
+  100% {
+    transform: scale(1);
+    filter: blur(3px) brightness(1);
+  }
+}
+
+/* 圆形扩散到全屏动画 */
+@keyframes expandCircleToFullScreen {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  10% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-50%, -50%) scale(5);
+    opacity: 1;
+  }
+  40% {
+    transform: translate(-50%, -50%) scale(10);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(20);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(-50%, -50%) scale(35);
+    opacity: 1;
+  }
+  95% {
+    transform: translate(-50%, -50%) scale(50);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(60);
+    opacity: 1;
+  }
 }
