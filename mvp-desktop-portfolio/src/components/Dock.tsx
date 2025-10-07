@@ -2,10 +2,26 @@
 'use client';
 import React, { useState } from 'react';
 import { skills } from '@/data/skills';
+import SkillDetailPage from './SkillDetailPage';
 
 const Dock = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const [selectedSkill, setSelectedSkill] = useState<any>(null);
+
+  const handleSkillClick = (skill: any) => {
+    setSelectedSkill(skill);
+  };
+
+  const handleProjectClick = (projectId: number) => {
+    // 这里可以添加跳转到项目详情的逻辑
+    console.log('点击项目:', projectId);
+    // 可以在这里添加路由跳转或其他逻辑
+  };
+
+  const handleCloseSkillPage = () => {
+    setSelectedSkill(null);
+  };
 
   const getIconScale = (index: number) => {
     if (hoveredIndex === null) return 1;
@@ -48,13 +64,14 @@ const Dock = () => {
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      bottom: '16px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      zIndex: 1000
-    }}>
+    <>
+      <div style={{
+        position: 'fixed',
+        bottom: '16px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 1000
+      }}>
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -89,28 +106,27 @@ const Dock = () => {
           return (
             <div
               key={skill.name}
-              style={{
-                width: '48px',
-                height: '48px',
-                backgroundColor: 'rgba(128, 128, 128, 0.6)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease-in-out',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '20px',
-                fontWeight: 'bold',
-                color: '#fff',
-                textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-                boxShadow: 'inset 0 0 8px rgba(0, 0, 0, 0.2)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                transform: `scale(${scale})`,
-                transformOrigin: 'center bottom',
-                marginRight: `${getSpacing()}px`,
-                position: 'relative'
-              }}
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease-in-out',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px',
+                  fontWeight: 'normal',
+                  color: '#1d1d1f',
+                  boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.2)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'center bottom',
+                  marginRight: `${getSpacing()}px`,
+                  position: 'relative'
+                }}
               title={skill.name}
               onMouseEnter={() => {
                 setHoveredIndex(index);
@@ -120,39 +136,65 @@ const Dock = () => {
                 setHoveredIndex(null);
                 setHoveredSkill(null);
               }}
+              onClick={() => handleSkillClick(skill)}
             >
               {skill.icon}
               
-              {/* 悬停时显示的提示 */}
-              {hoveredSkill === skill.name && (
-                <div style={{
-                  position: 'absolute',
-                  bottom: '100%',
-                  marginBottom: '12px',
-                  padding: '8px 12px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                  color: 'white',
-                  fontSize: '14px',
-                  borderRadius: '6px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                  whiteSpace: 'nowrap',
-                  zIndex: 1000
-                }}>
-                  <p style={{ fontWeight: 'bold', margin: 0 }}>{skill.name}</p>
-                  {skill.relatedProjects.length > 0 && (
-                    <ul style={{ margin: '4px 0 0 0', paddingLeft: '16px' }}>
-                      {skill.relatedProjects.map(project => (
-                        <li key={project} style={{ fontSize: '12px' }}>{project}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              )}
+               {/* 悬停时显示的 macOS 风格提示 */}
+               {hoveredSkill === skill.name && (
+                 <div style={{
+                   position: 'absolute',
+                   bottom: '100%',
+                   marginBottom: '8px',
+                   left: '50%',
+                   transform: 'translateX(-50%)',
+                   zIndex: 1000
+                 }}>
+                   {/* 提示框主体 */}
+                   <div style={{
+                     padding: '6px 12px',
+                     backgroundColor: 'rgba(60, 60, 60, 0.95)',
+                     color: 'white',
+                     fontSize: '8px',
+                     fontWeight: '500',
+                     borderRadius: '12px',
+                     boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
+                     whiteSpace: 'nowrap',
+                     backdropFilter: 'blur(20px)'
+                   }}>
+                     {skill.name}
+                   </div>
+                   
+                   {/* 指向性三角形 */}
+                   <div style={{
+                     position: 'absolute',
+                     top: '100%',
+                     left: '50%',
+                     transform: 'translateX(-50%)',
+                     width: '0',
+                     height: '0',
+                     borderLeft: '6px solid transparent',
+                     borderRight: '6px solid transparent',
+                     borderTop: '6px solid rgba(60, 60, 60, 0.95)',
+                     filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))'
+                   }} />
+                 </div>
+               )}
             </div>
           );
         })}
       </div>
-    </div>
+      </div>
+
+      {/* 技能详情页面 */}
+      {selectedSkill && (
+        <SkillDetailPage
+          skill={selectedSkill}
+          onClose={handleCloseSkillPage}
+          onProjectClick={handleProjectClick}
+        />
+      )}
+    </>
   );
 };
 

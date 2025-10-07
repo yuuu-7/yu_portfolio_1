@@ -7,7 +7,9 @@ import MemoWidget from '@/components/MemoWidget';
 import DesktopIcon from '@/components/DesktopIcon';
 import Window from '@/components/Window';
 import ProjectsContent from '@/components/ProjectsContent';
+import ProjectDetailPage from '@/components/ProjectDetailPage';
 import ExitButton from '@/components/ExitButton';
+import { projects } from '@/data/projects';
 
 export default function Home() {
   const [isDesktopVisible, setDesktopVisible] = useState(false);
@@ -16,6 +18,7 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [isProjectsWindowOpen, setProjectsWindowOpen] = useState(false);
   const [isAboutWindowOpen, setAboutWindowOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
 
   const handleEnter = (position: { x: number; y: number }) => {
@@ -49,10 +52,22 @@ export default function Home() {
     }, 2000); // 2秒后开始显示桌面
   };
 
+  const handleProjectClick = (projectId: number) => {
+    const project = projects.find(p => p.id === projectId);
+    if (project) {
+      setSelectedProject(project);
+    }
+  };
+
+  const handleCloseProject = () => {
+    setSelectedProject(null);
+  };
+
   const handleExit = () => {
     // 关闭所有窗口
     setProjectsWindowOpen(false);
     setAboutWindowOpen(false);
+    setSelectedProject(null);
     // 返回开屏界面
     setDesktopVisible(false);
   };
@@ -100,7 +115,7 @@ export default function Home() {
       {/* 条件渲染窗口 */}
       {isProjectsWindowOpen && (
         <Window title="我的作品" onClose={() => setProjectsWindowOpen(false)}>
-          <ProjectsContent />
+          <ProjectsContent onProjectClick={handleProjectClick} />
         </Window>
       )}
 
@@ -146,6 +161,14 @@ export default function Home() {
           <MemoWidget />
           <ExitButton onExit={handleExit} />
           <Dock />
+          
+          {/* 项目详情页面 */}
+          {selectedProject && (
+            <ProjectDetailPage
+              project={selectedProject}
+              onClose={handleCloseProject}
+            />
+          )}
         </main>
       )}
       

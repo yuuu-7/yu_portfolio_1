@@ -1,7 +1,11 @@
 // components/ProjectsContent.tsx
 import { projects } from '@/data/projects';
 
-const ProjectsContent = () => {
+interface ProjectsContentProps {
+  onProjectClick: (projectId: number) => void;
+}
+
+const ProjectsContent: React.FC<ProjectsContentProps> = ({ onProjectClick }) => {
   return (
     <div style={{
       display: 'grid',
@@ -9,15 +13,31 @@ const ProjectsContent = () => {
       gap: '16px'
     }}>
       {projects.map(project => (
-        <div key={project.id} style={{
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          borderRadius: '8px',
-          padding: '12px',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)'
-        }}>
+        <div 
+          key={project.id} 
+          onClick={() => onProjectClick(project.id)}
+          style={{
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '8px',
+            padding: '12px',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
           <img 
-            src={project.imageUrl} 
+            src={project.images[0]} 
             alt={project.title} 
             style={{
               width: '100%',
@@ -26,7 +46,29 @@ const ProjectsContent = () => {
               borderRadius: '6px',
               marginBottom: '8px'
             }}
+            onError={(e) => {
+              // 如果图片加载失败，显示占位符
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'flex';
+            }}
           />
+          {/* 占位符 */}
+          <div style={{
+            display: 'none',
+            width: '100%',
+            height: '120px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#e9ecef',
+            color: '#6c757d',
+            fontSize: '14px',
+            borderRadius: '6px',
+            marginBottom: '8px',
+            flexDirection: 'column'
+          }}>
+            <div style={{ fontSize: '24px', marginBottom: '4px' }}>🖼️</div>
+            <div>图片</div>
+          </div>
           <h3 style={{
             fontWeight: 'bold',
             marginBottom: '8px',
