@@ -1,5 +1,5 @@
 // components/SplashButton.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 interface SplashButtonProps {
   onEnter: (buttonPosition: { x: number; y: number }) => void;
@@ -7,14 +7,13 @@ interface SplashButtonProps {
   isExpanding?: boolean;
 }
 
-const SplashButton = ({ onEnter, isVisible, isExpanding = false }: SplashButtonProps) => {
+const SplashButton = ({ onEnter, isVisible }: SplashButtonProps) => {
   const [buttonClicked, setButtonClicked] = useState(false);
-  const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
   const [isButtonTransitioning, setIsButtonTransitioning] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
 
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleButtonClick = () => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       const position = {
@@ -23,7 +22,6 @@ const SplashButton = ({ onEnter, isVisible, isExpanding = false }: SplashButtonP
       };
       console.log('Button clicked! Position calculated:', position); // 调试日志
       console.log('Button rect:', rect); // 调试日志
-      setButtonPosition(position);
       
       // 开始按钮过渡效果
       setIsButtonTransitioning(true);

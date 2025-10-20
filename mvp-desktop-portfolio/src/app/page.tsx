@@ -18,7 +18,7 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [isProjectsWindowOpen, setProjectsWindowOpen] = useState(false);
   const [isAboutWindowOpen, setAboutWindowOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedProject, setSelectedProject] = useState<{ id: number; title: string; description: string; images: string[]; year: string; role: string; tech: string[] } | null>(null);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
 
   const handleEnter = (position: { x: number; y: number }) => {

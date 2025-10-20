@@ -22,8 +22,8 @@ interface SkillDetailPageProps {
   onProjectClick: (projectId: number) => void;
 }
 
-const SkillDetailPage: React.FC<SkillDetailPageProps> = ({ skill, onClose, onProjectClick }) => {
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+const SkillDetailPage: React.FC<SkillDetailPageProps> = ({ skill, onClose }) => {
+  const [selectedProject, setSelectedProject] = useState<{ id: number; title: string; description: string; images: string[]; year: string; role: string; tech: string[] } | null>(null);
 
   const handleProjectClick = (projectId: number) => {
     const project = projects.find(p => p.id === projectId);
@@ -51,8 +51,7 @@ const SkillDetailPage: React.FC<SkillDetailPageProps> = ({ skill, onClose, onPro
       maxHeight: '80vh',
       overflowY: 'auto',
       boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
-      zIndex: 2000,
-      position: 'relative'
+      zIndex: 2000
     }}>
         {/* 关闭按钮 */}
         <button

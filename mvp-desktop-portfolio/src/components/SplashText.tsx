@@ -31,7 +31,7 @@ const SplashText = ({ isVisible, fadeOutText = false }: SplashTextProps) => {
           fontSize: '40px' 
         }}
       >
-        Welcome to Huan Yu's study.
+        Welcome to Huan Yu&apos;s study.
       </h1>
       <h2 
         className="font-bold mb-0" 

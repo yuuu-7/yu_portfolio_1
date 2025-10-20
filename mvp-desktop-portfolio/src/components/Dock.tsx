@@ -7,9 +7,9 @@ import SkillDetailPage from './SkillDetailPage';
 const Dock = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
-  const [selectedSkill, setSelectedSkill] = useState<any>(null);
+  const [sel10ectedSkill, setSelectedSkill] = useState<{ name: string; icon: string; mastery: string; relatedProjects: { id: number; name: string; description: string; }[] } | null>(null);
 
-  const handleSkillClick = (skill: any) => {
+  const handleSkillClick = (skill: { name: string; icon: string; mastery: string; relatedProjects: { id: number; name: string; description: string; }[] }) => {
     setSelectedSkill(skill);
   };
 

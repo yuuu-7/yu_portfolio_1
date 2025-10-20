@@ -49,7 +49,10 @@ const ProjectsContent: React.FC<ProjectsContentProps> = ({ onProjectClick }) => 
             onError={(e) => {
               // 如果图片加载失败，显示占位符
               e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling.style.display = 'flex';
+              const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+              if (nextElement) {
+                nextElement.style.display = 'flex';
+              }
             }}
           />
           {/* 占位符 */}
